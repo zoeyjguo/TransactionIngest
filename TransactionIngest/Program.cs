@@ -37,10 +37,8 @@ try
         })
         .ConfigureServices((hostContext, services) =>
         {
-            //services.AddSingleton(hostContext.Configuration.GetSection(nameof(AppSettings)).Get<AppSettings>()!);
-            //services.AddSingleton<IWorker, Worker>();
-            //services.AddSingleton<ISplitPdfProcessor, SplitPdfProcessor>();
-            //services.AddSingleton<ISummaryEmailService, SummaryEmailService>();
+            services.AddSingleton<IWorker, Worker>();
+            services.AddSingleton<ITransactionProcessor, TransactionProcessor>();
         }).UseSerilog();
 
     var host = builder.Build();

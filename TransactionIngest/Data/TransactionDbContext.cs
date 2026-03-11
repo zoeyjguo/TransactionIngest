@@ -1,11 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TransactionIngest.Models;
 
-public class AppDbContext : DbContext
+public class TransactionDbContext : DbContext
 {
     public DbSet<Transaction> Transactions { get; set; }
+    public DbSet<Transaction> TransactionsChanges { get; set; }
 
-    public AppDbContext(DbContextOptions<AppDbContext> options)
+    public TransactionDbContext(DbContextOptions<TransactionDbContext> options)
         : base(options)
     {
     }
