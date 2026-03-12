@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Moq;
 
-namespace TransactionIngest.Tests;
+namespace TransactionIngest.Tests.ProcessorTests;
 
 [TestClass]
 public class AddTransactionProcessorTests
