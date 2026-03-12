@@ -1,4 +1,6 @@
-﻿const string loggerTemplate = "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u4}] [{SourceContext:l}] {Message:lj}{NewLine}{Exception}";
+﻿using Microsoft.EntityFrameworkCore;
+
+const string loggerTemplate = "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u4}] [{SourceContext:l}] {Message:lj}{NewLine}{Exception}";
 var baseDir = AppDomain.CurrentDomain.BaseDirectory;
 var logfile = Path.Combine(baseDir, "AppData", "logs", "log.txt");
 var loggerConfig = new Serilog.LoggerConfiguration()
@@ -38,11 +40,12 @@ try
         .ConfigureServices((hostContext, services) =>
         {
             services.AddSingleton<IWorker, Worker>();
-            services.AddSingleton<ITransactionProcessor, TransactionProcessor>();
+            services.AddSingleton<IUpdateTransactionProcessor, UpdateTransactionProcessor>();
         }).UseSerilog();
 
     var host = builder.Build();
     using var scope = host.Services.CreateScope();
+
     var worker = scope.ServiceProvider.GetRequiredService<IWorker>();
     worker.Run(DateTime.Now);
 }
