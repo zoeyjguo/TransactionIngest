@@ -1,13 +1,13 @@
 ﻿namespace TransactionIngest.Models;
 
-public class TransactionChange(int TransactionId, FieldChange FieldName, string OldValue, string NewValue, DateTime TransactionChangeTime)
+public class TransactionChange(int transactionId, FieldChange fieldName, string oldValue, string newValue, DateTime transactionChangeTime)
 {
     public int Id { get; set; }
-    public int TransactionId { get; set; } = TransactionId;
-    public FieldChange FieldName { get; set; } = FieldName;
-    public string OldValue { get; set; } = OldValue;
-    public string NewValue { get; set; } = NewValue;
-    public DateTime TransactionChangeTime { get; set; } = TransactionChangeTime;
+    public int TransactionId { get; set; } = transactionId;
+    public FieldChange FieldName { get; set; } = fieldName;
+    public string OldValue { get; set; } = oldValue;
+    public string NewValue { get; set; } = newValue;
+    public DateTime TransactionChangeTime { get; set; } = transactionChangeTime;
 }
 
 public enum FieldChange

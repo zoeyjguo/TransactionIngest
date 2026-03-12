@@ -1,6 +1,4 @@
-﻿using TransactionIngest.Models;
-
-public class TransactionDbContext : DbContext
+﻿public class TransactionDbContext : DbContext
 {
     public TransactionDbContext()
     {
@@ -12,4 +10,5 @@ public class TransactionDbContext : DbContext
     }
 
     public DbSet<Transaction> Transactions { get; set; }
+    public DbSet<TransactionChange> TransactionChanges { get; set; }
 }

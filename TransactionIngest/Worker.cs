@@ -1,21 +1,22 @@
 ﻿using Microsoft.Extensions.Logging;
 using System.Text.Json;
-using TransactionIngest.Models;
 
 public interface IWorker
 {
     public void Run(DateTime now);
 }
 
-public class Worker(ILogger<Worker> logger, IUpdateTransactionProcessor updateTransactionProcessor) : IWorker
+public class Worker(ILogger<Worker> logger, IAddTransactionProcessor addTransactionProcessor, IUpdateTransactionProcessor updateTransactionProcessor, 
+    IRevokeTransactionProcessor revokeTransactionProcessor) : IWorker
 {
     private readonly ILogger<Worker> _logger = logger;
     private readonly IUpdateTransactionProcessor _transactionProcessor = updateTransactionProcessor;
+    private readonly IAddTransactionProcessor _addTransactionProcessor = addTransactionProcessor;
+    private readonly IRevokeTransactionProcessor _revokeTransactionProcessor = revokeTransactionProcessor;
 
     public void Run(DateTime now)
     {
         using var db = new TransactionDbContext();
-        var timeCutoff = now.AddHours(-24);
 
         _logger.LogInformation("Starting...");
         var timeStamp = now.ToString("yyyyMMdd_HHmmss");
@@ -30,38 +31,14 @@ public class Worker(ILogger<Worker> logger, IUpdateTransactionProcessor updateTr
         }
 
         _logger.LogInformation("Adding new transactions...");
-        AddNewTransactions(db, incomingTransactions);
+        _addTransactionProcessor.AddTransactions(db, incomingTransactions);
 
         _logger.LogInformation("Checking updated transactions...");
         _transactionProcessor.UpdateTransactions(db, incomingTransactions, now);
 
-        //_logger.LogInformation("Checking revoked transactions...");
-        //_transactionProcessor.RevokeTransactions(db, incomingTransactions, now);
+        _logger.LogInformation("Checking revoked transactions...");
+        _revokeTransactionProcessor.RevokeTransactions(db, incomingTransactions, now);
 
         _logger.LogInformation("Finished.");
-    }
-
-    public void AddNewTransactions(TransactionDbContext db, List<Transaction> incomingTransactions)
-    {
-        var newTransactions = new List<Transaction>();
-        foreach (var transaction in incomingTransactions)
-        {
-            if (!db.Transactions.Any(t => t.TransactionId == transaction.TransactionId))
-            {
-                _logger.LogInformation("Adding transaction {TransactionId} to database...", transaction.TransactionId);
-                newTransactions.Add(transaction);
-            }
-        }
-
-        if (!newTransactions.Any())
-        {
-            _logger.LogInformation("No new transactions to add.");
-            return;
-        }
-
-        db.AddRange(newTransactions);
-        db.SaveChanges();
-
-        _logger.LogInformation("All new transactions have been added.");
     }
 }

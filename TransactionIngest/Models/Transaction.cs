@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using TransactionIngest.Services;
-
-namespace TransactionIngest.Models;
+﻿namespace TransactionIngest.Models;
 
 public class Transaction(int transactionId, string cardNumber, string locationCode, string productName, decimal amount, DateTime transactionTime, Boolean isRevoked)
 {
@@ -87,13 +82,17 @@ public class Transaction(int transactionId, string cardNumber, string locationCo
 
     public void RevokeTransaction(DateTime now)
     {
+        if (IsRevoked)
+            return;
+
         IsRevoked = true;
+
         TransactionChanges.Add(new TransactionChange(
             TransactionId,
             FieldChange.IsRevoked,
             "False",
             "True",
             now
-            ));
+        ));
     }
 }

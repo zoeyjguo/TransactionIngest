@@ -1,7 +1,7 @@
-﻿namespace TransactionIngest.Services;
-
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using TransactionIngest.Models;
+
+namespace TransactionIngest.Services;
 
 public interface IUpdateTransactionProcessor
 {

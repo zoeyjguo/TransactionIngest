@@ -41,7 +41,9 @@ try
             services.AddDbContext<TransactionDbContext>(options =>
                 options.UseSqlite(config.GetConnectionString("TransactionDatabase")));
             services.AddSingleton<IWorker, Worker>();
+            services.AddSingleton<IAddTransactionProcessor, AddTransactionProcessor>();
             services.AddSingleton<IUpdateTransactionProcessor, UpdateTransactionProcessor>();
+            services.AddSingleton<IRevokeTransactionProcessor, RevokeTransactionProcessor>();
             // services.Configure<ApiSettings>(config.GetSection("ApiSettings"));
         }).UseSerilog();
 
