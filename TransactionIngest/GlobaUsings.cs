@@ -5,4 +5,7 @@ global using System.Security.Principal;
 global using Microsoft.Extensions.Hosting;
 global using Microsoft.Extensions.Configuration;
 global using Microsoft.Extensions.DependencyInjection;
+global using Microsoft.EntityFrameworkCore;
+global using Microsoft.EntityFrameworkCore.Sqlite;
+global using TransactionIngest.Models;
 global using TransactionIngest.Services;

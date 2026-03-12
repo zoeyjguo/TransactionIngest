@@ -1,12 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
-using TransactionIngest.Models;
+﻿using TransactionIngest.Models;
 
 public class TransactionDbContext : DbContext
 {
-    public DbSet<Transaction> Transactions { get; set; }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder options)
+    public TransactionDbContext()
     {
-        options.UseSqlite("Data Source=transactions.db");
     }
+
+    public TransactionDbContext(DbContextOptions<TransactionDbContext> options)
+        : base(options)
+    {
+    }
+
+    public DbSet<Transaction> Transactions { get; set; }
 }

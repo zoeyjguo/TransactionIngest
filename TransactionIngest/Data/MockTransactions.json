@@ -6,7 +6,7 @@
     "productName": "Wireless Mouse",
     "amount": 19.99,
     "transactionTime": "2026-02-27T08:50:10Z",
-    "status": "Active",
+    "isRevoked": false,
     "transactionChanges": []
 
 
@@ -18,7 +18,7 @@
     "productName": "USB-C Cable",
     "amount": 25.0,
     "transactionTime": "2026-02-27T06:15:30Z",
-    "status": "Finalized",
+    "isRevoked": false,
     "transactionChanges": [
       {
         "changeId": 1,

@@ -5,7 +5,7 @@ using TransactionIngest.Services;
 
 namespace TransactionIngest.Models;
 
-public class Transaction(int transactionId, string cardNumber, string locationCode, string productName, decimal amount, DateTime transactionTime)
+public class Transaction(int transactionId, string cardNumber, string locationCode, string productName, decimal amount, DateTime transactionTime, Boolean isRevoked)
 {
     public int TransactionId { get; protected set; } = transactionId;
     public string CardNumber { get; protected set; } = cardNumber;
@@ -13,7 +13,7 @@ public class Transaction(int transactionId, string cardNumber, string locationCo
     public string ProductName { get; protected set; } = productName;
     public decimal Amount { get; protected set; } = amount;
     public DateTime TransactionTime { get; protected set; } = transactionTime;
-    public Status Status { get; protected set; } = Status.Active;
+    public Boolean isRevoked { get; protected set; } = isRevoked;
     public List<TransactionChange> TransactionChanges { get; protected set; } = new List<TransactionChange>();
 
     // There is definitely a better way to do this, but for the sake of time, this is what I have. :(

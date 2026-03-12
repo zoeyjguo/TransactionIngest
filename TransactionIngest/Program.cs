@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-const string loggerTemplate = "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u4}] [{SourceContext:l}] {Message:lj}{NewLine}{Exception}";
+﻿const string loggerTemplate = "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u4}] [{SourceContext:l}] {Message:lj}{NewLine}{Exception}";
 var baseDir = AppDomain.CurrentDomain.BaseDirectory;
 var logfile = Path.Combine(baseDir, "AppData", "logs", "log.txt");
 var loggerConfig = new Serilog.LoggerConfiguration()
@@ -39,8 +37,12 @@ try
         })
         .ConfigureServices((hostContext, services) =>
         {
+            var config = hostContext.Configuration;
+            services.AddDbContext<TransactionDbContext>(options =>
+                options.UseSqlite(config.GetConnectionString("TransactionDatabase")));
             services.AddSingleton<IWorker, Worker>();
             services.AddSingleton<IUpdateTransactionProcessor, UpdateTransactionProcessor>();
+            // services.Configure<ApiSettings>(config.GetSection("ApiSettings"));
         }).UseSerilog();
 
     var host = builder.Build();
