@@ -27,5 +27,32 @@
         "TransactionChangeTime": "2026-02-27T07:00:00Z"
       }
     ]
+  },
+  {
+    "TransactionId": 1003,
+    "CardNumber": "3333333333333333",
+    "LocationCode": "STO-03",
+    "ProductName": "USB-A Cable",
+    "Amount": 15.00,
+    "TransactionTime": "2026-02-27T08:50:10Z",
+    "IsRevoked": false,
+    "TransactionChanges": [
+      {
+        "ChangeId": 2,
+        "TransactionId": 103,
+        "FieldName": "Amount",
+        "OldValue": 25.0,
+        "NewValue": 15.0,
+        "TransactionChangeTime": "2026-01-27T08:50:10Z"
+      },
+      {
+        "ChangeId": 3,
+        "TransactionId": 103,
+        "FieldName": "Amount",
+        "OldValue": 20.0,
+        "NewValue": 25.0,
+        "TransactionChangeTime": "2026-01-20T08:50:10Z"
+      }
+    ]
   }
 ]

@@ -1,5 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using System.Text.Json;
+
+namespace TransactionIngest;
 
 public interface IWorker
 {
@@ -7,23 +10,21 @@ public interface IWorker
 }
 
 public class Worker(ILogger<Worker> logger, IAddTransactionProcessor addTransactionProcessor, IUpdateTransactionProcessor updateTransactionProcessor, 
-    RevokeTransactionProcessor revokeTransactionProcessor, IServiceProvider serviceProvider) : IWorker
+    IRevokeTransactionProcessor revokeTransactionProcessor, IServiceProvider serviceProvider, IOptions<ApiSettings> apiSettings) : IWorker
 {
     private readonly ILogger<Worker> _logger = logger;
-    private readonly IUpdateTransactionProcessor _transactionProcessor = updateTransactionProcessor;
+    private readonly string _apiPath = apiSettings.Value.TransactionApiUrl;
+    private readonly IUpdateTransactionProcessor _updateTransactionProcessor = updateTransactionProcessor;
     private readonly IAddTransactionProcessor _addTransactionProcessor = addTransactionProcessor;
-    private readonly RevokeTransactionProcessor _revokeTransactionProcessor = revokeTransactionProcessor;
+    private readonly IRevokeTransactionProcessor _revokeTransactionProcessor = revokeTransactionProcessor;
     private readonly IServiceProvider _serviceProvider = serviceProvider;
 
     public void Run(DateTime now)
     {
         _logger.LogInformation("Starting...");
-        var timeStamp = now.ToString("yyyyMMdd_HHmmss");
 
-        var baseDir = AppDomain.CurrentDomain.BaseDirectory;
-        var jsonFile = Path.Combine(baseDir, "Data", "MockTransactions.json");
-        _logger.LogInformation("Looking for transaction file at {JsonPath}", jsonFile);
-        var json = File.ReadAllText(jsonFile);
+        var json = File.ReadAllText(_apiPath);
+        _logger.LogInformation("Looking for transaction file at {ApiPath}", _apiPath);
         List<Transaction>? incomingTransactions = JsonSerializer.Deserialize<List<Transaction>>(json);
 
         if (incomingTransactions == null || incomingTransactions.Count == 0)
@@ -38,9 +39,11 @@ public class Worker(ILogger<Worker> logger, IAddTransactionProcessor addTransact
 
         _logger.LogInformation("Adding new transactions...");
         _addTransactionProcessor.AddTransactions(db, incomingTransactions);
+        logger.LogInformation("All new transactions have been added.");
 
         _logger.LogInformation("Checking updated transactions...");
-        _transactionProcessor.UpdateTransactions(db, incomingTransactions, now);
+        _updateTransactionProcessor.UpdateTransactions(db, incomingTransactions, now);
+        logger.LogInformation("All new transactions have been added.");
 
         _logger.LogInformation("Checking revoked transactions...");
         _revokeTransactionProcessor.RevokeTransactions(db, incomingTransactions, now);
