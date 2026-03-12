@@ -12,9 +12,11 @@ public class AddTransactionProcessor(ILogger<AddTransactionProcessor> logger) : 
     public void AddTransactions(TransactionDbContext db, List<Transaction> incomingTransactions)
     {
         var newTransactions = new List<Transaction>();
+        var existingIds = db.Transactions.Select(t => t.TransactionId).ToHashSet();
+
         foreach (var transaction in incomingTransactions)
         {
-            if (!db.Transactions.Any(t => t.TransactionId == transaction.TransactionId))
+            if (!existingIds.Contains(transaction.TransactionId))
             {
                 logger.LogInformation("Adding transaction {TransactionId} to database...", transaction.TransactionId);
                 newTransactions.Add(transaction);

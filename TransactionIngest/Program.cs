@@ -50,7 +50,7 @@ try
             // Register processors
             services.AddSingleton<IAddTransactionProcessor, AddTransactionProcessor>();
             services.AddSingleton<IUpdateTransactionProcessor, UpdateTransactionProcessor>();
-            services.AddSingleton<IRevokeTransactionProcessor, RevokeTransactionProcessor>();
+            services.AddSingleton<RevokeTransactionProcessor, RevokeTransactionProcessor>();
 
             // Register worker and use IServiceProvider (needed to Google how to do this)
             services.AddSingleton<IWorker>(sp =>
@@ -58,7 +58,7 @@ try
                     sp.GetRequiredService<ILogger<Worker>>(),
                     sp.GetRequiredService<IAddTransactionProcessor>(),
                     sp.GetRequiredService<IUpdateTransactionProcessor>(),
-                    sp.GetRequiredService<IRevokeTransactionProcessor>(),
+                    sp.GetRequiredService<RevokeTransactionProcessor>(),
                     sp
                 ));
         }).UseSerilog();

@@ -7,12 +7,12 @@ public interface IWorker
 }
 
 public class Worker(ILogger<Worker> logger, IAddTransactionProcessor addTransactionProcessor, IUpdateTransactionProcessor updateTransactionProcessor, 
-    IRevokeTransactionProcessor revokeTransactionProcessor, IServiceProvider serviceProvider) : IWorker
+    RevokeTransactionProcessor revokeTransactionProcessor, IServiceProvider serviceProvider) : IWorker
 {
     private readonly ILogger<Worker> _logger = logger;
     private readonly IUpdateTransactionProcessor _transactionProcessor = updateTransactionProcessor;
     private readonly IAddTransactionProcessor _addTransactionProcessor = addTransactionProcessor;
-    private readonly IRevokeTransactionProcessor _revokeTransactionProcessor = revokeTransactionProcessor;
+    private readonly RevokeTransactionProcessor _revokeTransactionProcessor = revokeTransactionProcessor;
     private readonly IServiceProvider _serviceProvider = serviceProvider;
 
     public void Run(DateTime now)
