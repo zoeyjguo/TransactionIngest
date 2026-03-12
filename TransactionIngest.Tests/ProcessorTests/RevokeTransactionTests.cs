@@ -36,6 +36,7 @@ public class RevokeTransactionsProcessorTests
         };
 
         processor.RevokeTransactions(db, incomingTransactions, new DateTime(2026, 1, 1));
+
         Assert.AreEqual(2, db.Transactions.Count());
 
         var firstTransaction = db.Transactions.First();    
