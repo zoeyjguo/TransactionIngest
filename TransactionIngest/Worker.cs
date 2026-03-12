@@ -32,6 +32,9 @@ public class Worker(ILogger<Worker> logger, IUpdateTransactionProcessor updateTr
         _logger.LogInformation("Adding new transactions...");
         AddNewTransactions(db, incomingTransactions);
 
+        _logger.LogInformation("Updating transactions...");
+        _transactionProcessor.UpdateTransactions(db, incomingTransactions, now);
+
         //_transactionProcessor.ProcessTransactions();
 
         _logger.LogInformation("Finished.");

@@ -5,24 +5,26 @@ using TransactionIngest.Models;
 
 public interface IUpdateTransactionProcessor
 {
-    public void AddNewTransactions(List<Transaction> newTransactions);
-    //public void UpdateTransactions();
+    public void UpdateTransactions(TransactionDbContext db, List<Transaction> incomingTransactions, DateTime now);
 }
 
 public class UpdateTransactionProcessor(ILogger<UpdateTransactionProcessor> logger) : IUpdateTransactionProcessor
 {
-    //private TransactionDbContext db;
-    //private DateTime timeCutoff;
-    //private List<Transaction> incomingTransactions;
+    public void UpdateTransactions(TransactionDbContext db, List<Transaction> incomingTransactions, DateTime now)
+    {
+        foreach (var transaction in incomingTransactions)
+        {
+            var existingTransaction = db.Transactions.FirstOrDefault(t => t.TransactionId == transaction.TransactionId);
+            if (existingTransaction == null)
+            {
+                continue;
+            }
 
-    //public UpdateTransactionProcessor(ILogger<UpdateTransactionProcessor> logger, List<Transaction> transactions, DateTime now)
-    //{
-    //    db = new TransactionDbContext();
-    //    timeCutoff = now.AddHours(-24);
-    //    incomingTransactions = transactions;
-    //}
+            logger.LogInformation("Updating transaction {TransactionId}...", transaction.TransactionId);
+            existingTransaction.UpdateFrom(transaction, now);
+        }
+        db.SaveChanges();
 
-    //public void UpdateTransactions(Transaction transaction)
-    //{
-    //}
+        logger.LogInformation("All transactions have been updated.");
+    }
 }
