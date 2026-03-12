@@ -13,8 +13,8 @@ public class Transaction(int transactionId, string cardNumber, string locationCo
     public string ProductName { get; protected set; } = productName;
     public decimal Amount { get; protected set; } = amount;
     public DateTime TransactionTime { get; protected set; } = transactionTime;
-    public Boolean isRevoked { get; protected set; } = isRevoked;
-    public List<TransactionChange> TransactionChanges { get; protected set; } = new List<TransactionChange>();
+    public Boolean IsRevoked { get; protected set; } = isRevoked;
+    public List<TransactionChange> TransactionChanges { get; protected set; } = [];
 
     // There is definitely a better way to do this, but for the sake of time, this is what I have. :(
     public void UpdateFrom(Transaction newTransaction, DateTime now)
@@ -84,11 +84,16 @@ public class Transaction(int transactionId, string cardNumber, string locationCo
             TransactionTime = newTransaction.TransactionTime;
         }
     }
-}
 
-public enum Status
-{
-    Active,
-    Revoked,
-    Finalized
+    public void RevokeTransaction(DateTime now)
+    {
+        IsRevoked = true;
+        TransactionChanges.Add(new TransactionChange(
+            TransactionId,
+            FieldChange.IsRevoked,
+            "False",
+            "True",
+            now
+            ));
+    }
 }

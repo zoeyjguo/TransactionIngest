@@ -17,5 +17,5 @@ public enum FieldChange
     ProductName,
     Amount,
     TransactionTime,
-    Status
+    IsRevoked
 }
