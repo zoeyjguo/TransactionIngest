@@ -1,4 +1,6 @@
-﻿const string loggerTemplate = "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u4}] [{SourceContext:l}] {Message:lj}{NewLine}{Exception}";
+﻿using Microsoft.Extensions.Logging;
+
+const string loggerTemplate = "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level:u4}] [{SourceContext:l}] {Message:lj}{NewLine}{Exception}";
 var baseDir = AppDomain.CurrentDomain.BaseDirectory;
 var logfile = Path.Combine(baseDir, "AppData", "logs", "log.txt");
 var loggerConfig = new Serilog.LoggerConfiguration()
@@ -7,6 +9,7 @@ var loggerConfig = new Serilog.LoggerConfiguration()
     .WriteTo.Console(LogEventLevel.Information, loggerTemplate, theme: AnsiConsoleTheme.Literate)
     .WriteTo.File(logfile, LogEventLevel.Information, loggerTemplate, rollingInterval: RollingInterval.Day, retainedFileCountLimit: 366);
 Log.Logger = loggerConfig.CreateLogger();
+Batteries_V2.Init();
 
 try
 {
@@ -38,18 +41,30 @@ try
         .ConfigureServices((hostContext, services) =>
         {
             var config = hostContext.Configuration;
+
+            // EF Core with SQLite
             services.AddDbContext<TransactionDbContext>(options =>
                 options.UseSqlite(config.GetConnectionString("TransactionDatabase")));
             services.AddSingleton<IWorker, Worker>();
+
+            // Register processors
             services.AddSingleton<IAddTransactionProcessor, AddTransactionProcessor>();
             services.AddSingleton<IUpdateTransactionProcessor, UpdateTransactionProcessor>();
             services.AddSingleton<IRevokeTransactionProcessor, RevokeTransactionProcessor>();
-            // services.Configure<ApiSettings>(config.GetSection("ApiSettings"));
+
+            // Register worker and use IServiceProvider (needed to Google how to do this)
+            services.AddSingleton<IWorker>(sp =>
+                new Worker(
+                    sp.GetRequiredService<ILogger<Worker>>(),
+                    sp.GetRequiredService<IAddTransactionProcessor>(),
+                    sp.GetRequiredService<IUpdateTransactionProcessor>(),
+                    sp.GetRequiredService<IRevokeTransactionProcessor>(),
+                    sp
+                ));
         }).UseSerilog();
 
     var host = builder.Build();
     using var scope = host.Services.CreateScope();
-
     var worker = scope.ServiceProvider.GetRequiredService<IWorker>();
     worker.Run(DateTime.Now);
 }

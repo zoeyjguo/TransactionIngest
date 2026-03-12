@@ -1,32 +1,30 @@
 [
   {
-    "transactionId": 1001,
-    "cardNumber": "4111111111111111",
-    "locationCode": "STO-01",
-    "productName": "Wireless Mouse",
-    "amount": 19.99,
-    "transactionTime": "2026-02-27T08:50:10Z",
-    "isRevoked": false,
-    "transactionChanges": []
-
-
+    "TransactionId": 1001,
+    "CardNumber": "4111111111111111",
+    "LocationCode": "STO-01",
+    "ProductName": "Wireless Mouse",
+    "Amount": 19.99,
+    "TransactionTime": "2026-02-27T08:50:10Z",
+    "IsRevoked": false,
+    "TransactionChanges": []
   },
   {
-    "transactionId": 1002,
-    "cardNumber": "4000000000000002",
-    "locationCode": "STO-02",
-    "productName": "USB-C Cable",
-    "amount": 25.0,
-    "transactionTime": "2026-02-27T06:15:30Z",
-    "isRevoked": false,
-    "transactionChanges": [
+    "TransactionId": 1002,
+    "CardNumber": "4000000000000002",
+    "LocationCode": "STO-02",
+    "ProductName": "USB-C Cable",
+    "Amount": 25.0,
+    "TransactionTime": "2026-02-27T06:15:30Z",
+    "IsRevoked": false,
+    "TransactionChanges": [
       {
-        "changeId": 1,
-        "transactionId": 1002,
-        "fieldName": "Amount",
-        "oldValue": 20.0,
-        "newValue": 25.0,
-        "transactionChangeTime": "2026-02-27T07:00:00Z"
+        "ChangeId": 1,
+        "TransactionId": 1002,
+        "FieldName": "Amount",
+        "OldValue": 20.0,
+        "NewValue": 25.0,
+        "TransactionChangeTime": "2026-02-27T07:00:00Z"
       }
     ]
   }

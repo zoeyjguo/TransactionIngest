@@ -10,5 +10,5 @@
     }
 
     public DbSet<Transaction> Transactions { get; set; }
-    public DbSet<TransactionChange> TransactionChanges { get; set; }
+    //public DbSet<TransactionChange> TransactionChanges { get; set; }
 }

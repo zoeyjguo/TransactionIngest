@@ -1,19 +1,44 @@
-﻿namespace TransactionIngest.Models;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-public class Transaction(int transactionId, string cardNumber, string locationCode, string productName, decimal amount, DateTime transactionTime, Boolean isRevoked)
+namespace TransactionIngest.Models;
+
+public class Transaction
 {
-    public int TransactionId { get; protected set; } = transactionId;
-    public string CardNumber { get; protected set; } = cardNumber;
-    public string LocationCode { get; protected set; } = locationCode;
-    public string ProductName { get; protected set; } = productName;
-    public decimal Amount { get; protected set; } = amount;
-    public DateTime TransactionTime { get; protected set; } = transactionTime;
-    public Boolean IsRevoked { get; protected set; } = isRevoked;
-    public List<TransactionChange> TransactionChanges { get; protected set; } = [];
+    public Transaction()
+    {
+        TransactionChanges = [];
+    }
+
+    public Transaction(int transactionId, string cardNumber, string locationCode, string productName, decimal amount, DateTime transactionTime, bool isRevoked)
+    {
+        TransactionId = transactionId;
+        CardNumber = cardNumber;
+        LocationCode = locationCode;
+        ProductName = productName;
+        Amount = amount;
+        TransactionTime = transactionTime;
+        IsRevoked = isRevoked;
+        TransactionChanges = [];
+    }
+
+    public int TransactionId { get; set; }
+    [MaxLength(20)]
+    public string CardNumber { get; set; } = null!;
+    [MaxLength(20)] 
+    public string LocationCode { get; set; } = null!;
+    [MaxLength(20)] 
+    public string ProductName { get; set; } = null!;
+    [Column(TypeName = "decimal(18,2)")] 
+    public decimal Amount { get; set; }
+    public DateTime TransactionTime { get; set; }
+    public bool IsRevoked { get; set; }
+    public List<TransactionChange> TransactionChanges { get; set; } = [];
 
     // There is definitely a better way to do this, but for the sake of time, this is what I have. :(
     public void UpdateFrom(Transaction newTransaction, DateTime now)
     {
+
         if (CardNumber != newTransaction.CardNumber)
         {
             TransactionChanges.Add(new TransactionChange

@@ -2,4 +2,3 @@
 global using Microsoft.VisualStudio.TestTools.UnitTesting;
 global using TransactionIngest.Models;
 global using TransactionIngest.Services;
-global using TransactionIngest.Utils;
